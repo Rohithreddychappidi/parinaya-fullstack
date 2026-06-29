@@ -4,6 +4,17 @@ const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
 
+// ─── Process-level safety net ──────────────────────────────────────────────────
+// A missed try/catch in a route (an unhandled rejection) would otherwise crash
+// the whole Node process by default. Log it and keep the server alive instead
+// of taking the entire site down over one bad request.
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled promise rejection:', reason);
+});
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught exception:', err);
+});
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 
@@ -56,17 +67,25 @@ app.use('/api/config',     require('./routes/config'));
 app.use('/api/siteimages', require('./routes/siteimages'));
 
 // ─── Admin panel HTML routes ───────────────────────────────────────────────────
-const { requireSession } = require('./middleware/auth');
+// NOTE: these pages are intentionally NOT gated by requireSession here.
+// Auth is enforced client-side via admin.js's requireAuth() (JWT in localStorage)
+// on page load, and server-side on every actual data request via requireAuth
+// in the /api routes above. Guarding the HTML shell itself with a separate
+// session check caused a redirect loop: the session store resets on every
+// server restart while the JWT in localStorage survives, so the two checks
+// disagreed and bounced the browser between /admin/login and /admin/dashboard
+// forever. Serving the static shell unguarded is safe — it contains no data
+// until admin.js successfully authenticates and fetches it.
 const adminDir = path.join(__dirname, '../admin');
 
 app.get('/admin',               (_req, res) => res.redirect('/admin/login'));
 app.get('/admin/login',         (_req, res) => res.sendFile('login.html',       { root: adminDir }));
-app.get('/admin/dashboard',     requireSession, (_req, res) => res.sendFile('dashboard.html',   { root: adminDir }));
-app.get('/admin/products',      requireSession, (_req, res) => res.sendFile('products.html',    { root: adminDir }));
-app.get('/admin/products/new',  requireSession, (_req, res) => res.sendFile('product-form.html',{ root: adminDir }));
-app.get('/admin/products/:id',  requireSession, (_req, res) => res.sendFile('product-form.html',{ root: adminDir }));
-app.get('/admin/categories',    requireSession, (_req, res) => res.sendFile('categories.html',  { root: adminDir }));
-app.get('/admin/settings',      requireSession, (_req, res) => res.sendFile('settings.html',    { root: adminDir }));
+app.get('/admin/dashboard',     (_req, res) => res.sendFile('dashboard.html',   { root: adminDir }));
+app.get('/admin/products',      (_req, res) => res.sendFile('products.html',    { root: adminDir }));
+app.get('/admin/products/new',  (_req, res) => res.sendFile('product-form.html',{ root: adminDir }));
+app.get('/admin/products/:id',  (_req, res) => res.sendFile('product-form.html',{ root: adminDir }));
+app.get('/admin/categories',    (_req, res) => res.sendFile('categories.html',  { root: adminDir }));
+app.get('/admin/settings',      (_req, res) => res.sendFile('settings.html',    { root: adminDir }));
 
 // ─── Health check ──────────────────────────────────────────────────────────────
 app.get('/health', (_req, res) => res.json({ status: 'ok', env: process.env.NODE_ENV }));

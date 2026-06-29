@@ -57,7 +57,14 @@ export default function Contact() {
             <MapPin size={20} className="text-gold-dark mt-1 flex-shrink-0" />
             <div>
               <h3 className="text-sm uppercase tracking-wide text-ink mb-1">Address</h3>
-              <p className="text-ink/70 leading-relaxed">{address}</p>
+              <a
+                href="https://share.google/K1nj5Bls2RUBCMdQ3"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink/70 leading-relaxed hover:text-gold-dark transition-colors"
+              >
+                {address}
+              </a>
             </div>
           </div>
 

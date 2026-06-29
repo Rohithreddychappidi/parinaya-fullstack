@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Menu, X, MessageCircle, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useConfig } from '../../hooks/useConfig';
 import { getCategories, buildWhatsAppLink } from '../../services/api';
+import logo from '../../assets/logo.png';
 
 export default function Header() {
   const [mobileOpen, setMobileOpen]   = useState(false);
@@ -85,12 +86,15 @@ export default function Header() {
             <Menu size={22} />
           </button>
 
-          <Link to="/" className="flex flex-col items-center lg:items-start">
-            <span className="font-display text-2xl sm:text-3xl tracking-wide text-ink leading-none">
-              {logoText}
-            </span>
-            <span className="text-[10px] tracking-widest2 uppercase text-gold-dark mt-1">
-              {logoSubtext}
+          <Link to="/" className="flex items-center gap-2.5">
+            <img src={logo} alt={logoText} className="h-12 sm:h-14 w-auto" />
+            <span className="flex flex-col items-start">
+              <span className="font-display text-2xl sm:text-3xl tracking-wide text-ink leading-none">
+                {logoText}
+              </span>
+              <span className="text-[10px] tracking-widest2 uppercase text-gold-dark mt-1">
+                {logoSubtext}
+              </span>
             </span>
           </Link>
 
@@ -188,7 +192,10 @@ export default function Header() {
           <div className="absolute inset-0 bg-ink/40" onClick={() => setMobileOpen(false)} />
           <div className="absolute left-0 top-0 h-full w-[82%] max-w-sm bg-paper overflow-y-auto">
             <div className="flex items-center justify-between p-5 border-b border-line">
-              <span className="font-display text-xl text-ink">{logoText}</span>
+              <span className="flex items-center gap-2">
+                <img src={logo} alt={logoText} className="h-8 w-auto" />
+                <span className="font-display text-xl text-ink">{logoText}</span>
+              </span>
               <button onClick={() => setMobileOpen(false)} aria-label="Close menu"><X size={22} /></button>
             </div>
             <nav className="flex flex-col">

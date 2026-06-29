@@ -40,9 +40,14 @@ router.post('/logout', (req, res) => {
 
 // GET /api/auth/me
 router.get('/me', requireAuth, async (req, res) => {
-  const { rows } = await pool.query('SELECT id, email, name FROM admins WHERE id = $1', [req.adminId]);
-  if (!rows[0]) return res.status(404).json({ error: 'Admin not found' });
-  res.json(rows[0]);
+  try {
+    const { rows } = await pool.query('SELECT id, email, name FROM admins WHERE id = $1', [req.adminId]);
+    if (!rows[0]) return res.status(404).json({ error: 'Admin not found' });
+    res.json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 // POST /api/auth/change-password

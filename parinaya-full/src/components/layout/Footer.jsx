@@ -4,6 +4,7 @@ import { Mail, Phone, MapPin } from 'lucide-react';
 import { FacebookIcon, InstagramIcon } from '../ui/BrandIcons';
 import { useConfig } from '../../hooks/useConfig';
 import { getCategories } from '../../services/api';
+import logo from '../../assets/logo.png';
 
 export default function Footer() {
   const { config } = useConfig();
@@ -38,7 +39,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
-            <span className="font-display text-2xl block mb-3">{logoText}</span>
+            <div className="flex items-center gap-3 mb-4">
+              <img src={logo} alt={logoText} className="h-14 w-auto" />
+              <span className="font-display text-2xl">{logoText}</span>
+            </div>
             <p className="text-sm text-paper/70 leading-relaxed">
               Handcrafted Tanjore paintings, brass idols and traditional
               decor — made by skilled artisans in the heritage style of South India.
@@ -107,7 +111,14 @@ export default function Footer() {
               </li>
               <li className="flex gap-2.5">
                 <MapPin size={15} className="mt-0.5 flex-shrink-0 text-gold" />
-                <span>{address}</span>
+                <a
+                  href="https://share.google/K1nj5Bls2RUBCMdQ3"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-gold transition-colors"
+                >
+                  {address}
+                </a>
               </li>
             </ul>
           </div>
