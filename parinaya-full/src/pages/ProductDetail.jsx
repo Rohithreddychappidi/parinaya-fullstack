@@ -64,7 +64,12 @@ export default function ProductDetail() {
   const inStock = product.in_stock ?? product.inStock ?? true;
 
   const handleAddToCart = () => {
-    addToCart(product);
+    // Explicitly attach the first image URL so CartContext can store it
+    const productWithImage = {
+      ...product,
+      images: imageUrls.length > 0 ? [{ url: imageUrls[0] }] : [],
+    };
+    addToCart(productWithImage);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
