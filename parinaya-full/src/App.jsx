@@ -5,6 +5,7 @@ import Collection from "./pages/Collection";
 import ProductDetail from "./pages/ProductDetail";
 import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
+import Search from "./pages/Search";
 import NotFound from "./pages/NotFound";
 import { CartProvider } from "./context/CartContext";
 
@@ -19,6 +20,7 @@ function App() {
             <Route path="/products/:id" element={<ProductDetail />} />
             <Route path="/pages/contact" element={<Contact />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/search" element={<Search />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
